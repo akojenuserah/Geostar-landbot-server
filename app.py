@@ -1,6 +1,5 @@
 from flask import Flask
 import pandas as pd
-import json
 
 data_csv = pd.read_csv('new_data.csv',low_memory=False)
 frame = pd.DataFrame(data_csv)
@@ -38,7 +37,7 @@ def hospital_status(hospital):
     ownership = specific_clinic_rows['Ownership (Public/Private)'].unique()[0]
     facility_type = specific_clinic_rows['Facility Type (Primary/Secondary/Tertiary)'].unique()[0]
     formatted_string = f'Ownership: {ownership} <br> Facility Type: {facility_type}'
-    return json.loads(formatted_string)
+    return formatted_string
 
 #done
 @app.route('/lga/ward/hospital/<hospital>/humanResources')    
@@ -61,7 +60,7 @@ def hospital_resources(hospital):
         else:
             data += column + ': This information is currently not available' + '<br><br>'
         x+=1
-    return json.loads(data)
+    return data
 
 
 #done
@@ -81,7 +80,7 @@ def settlement_population(settlement):
             data += column + ': ' + str(settlement_info[column].tolist()[0]) + '<br><br>'
         else:
             data += column + ': This information is currently not available' + '<br><br>'
-    return json.loads(data)
+    return data
 
 #done
 @app.route('/lga/ward/hospital/settlement/profile/<settlement>')    
@@ -107,7 +106,7 @@ def settlement_profile(settlement):
             else:
                 data += column + ': This information is currently not available' + '<br><br>'
         x+=1
-    return json.loads(data)
+    return data
 
 #done
 @app.route('/lga/ward/hospital/settlement/immune/<settlement>')    
@@ -125,7 +124,7 @@ def settlement_immune(settlement):
                 data += 'phone number: This information is currently not available' + '<br><br>'
             else:
                 data += column + ': This information is currently not available' + '<br><br>'
-    return json.loads(data)
+    return data
 
 #done
 @app.route('/lga/ward/hospital/settlement/family/<settlement>')    
@@ -143,7 +142,7 @@ def settlement_family(settlement):
                 data += 'phone number: This information is currently not available' + '<br><br>'
             else:
                 data += column + ': This information is currently not available' + '<br><br>'
-    return json.loads(data)
+    return data
 
 #done
 @app.route('/lga/ward/hospital/settlement/malaria/<settlement>')    
@@ -161,7 +160,7 @@ def settlement_malaria(settlement):
                 data += 'phone number: This information is currently not available' + '<br><br>'
             else:
                 data += column + ': This information is currently not available' + '<br><br>'
-    return json.loads(data)
+    return data
 
 #done
 @app.route('/lga/ward/hospital/settlement/consumables/<settlement>')    
@@ -179,7 +178,7 @@ def settlement_consumables(settlement):
                 data += 'phone number: This information is currently not available' + '<br><br>'
             else:
                 data += column + ': This information is currently not available' + '<br><br>'
-    return json.loads(data)
+    return data
 
 
 #done
@@ -198,7 +197,7 @@ def settlement_factools(settlement):
                 data += 'phone number: This information is currently not available' + '<br><br>'
             else:
                 data += column + ': This information is currently not available' + '<br><br>'
-    return json.loads(data)
+    return data
 
 
 if __name__ == '__main__':
