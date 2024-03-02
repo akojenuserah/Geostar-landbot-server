@@ -50,7 +50,7 @@ def hospital_resources(hospital):
     data = ""
     x = 0
     for column in columns:
-        if specific_clinic_rows.iloc[0][column] != 'NaN':
+        if specific_clinic_rows.iloc[0][column] != 'NaN' and specific_clinic_rows.iloc[0][column] != 'nan':
             if 'phone number' in column.lower(): 
                 data += 'phone number: ' + str(specific_clinic_rows.iloc[0][column]) + '<br><br>'
             else:
@@ -76,7 +76,7 @@ def settlement_population(settlement):
     settlement_info = data_csv[data_csv['Settlement'] == settlement].loc[:,'Total Population of the Settlement':'Mentally Challenged']
     data = ""
     for column in settlement_info.columns.tolist():
-        if settlement_info[column].tolist()[0] != 'NaN':
+        if settlement_info[column].tolist()[0] != 'NaN' and settlement_info[column].tolist()[0] != 'nan':
             data += column + ': ' + str(settlement_info[column].tolist()[0]) + '<br><br>'
         else:
             data += column + ': This information is currently not available' + '<br><br>'
@@ -98,7 +98,7 @@ def settlement_profile(settlement):
                 data += 'phone number: ' + str(settlement_info[column].tolist()[0]) + '<br><br>'
             else:
                 data += column + ': ' + str(settlement_info[column].tolist()[0]) + '<br><br>'
-        elif x == 0 or x == 6:
+        elif x == 2 or x == 7:
             data += column + "\t"
         else:
             if 'phone number' in column.lower(): 
