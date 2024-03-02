@@ -1,5 +1,6 @@
 from flask import Flask
 import pandas as pd
+import json
 
 data_csv = pd.read_csv('new_data.csv',low_memory=False)
 frame = pd.DataFrame(data_csv)
@@ -11,7 +12,6 @@ app = Flask(__name__)
 @app.route('/lgas')    
 def lgas():
     unique_lga = frame['LGA'].unique().tolist()
-    unique_lga.append('go back')
     return unique_lga
 
 #done
@@ -24,6 +24,10 @@ def ward(lga):
 @app.route('/lga/ward/<ward>')    
 def hospitals(ward):
     associated_hospitals = frame[data_csv['Ward'] == ward]['Health Facility'].unique().tolist()
+    while 'nan' in associated_hospitals:
+        associated_hospitals.remove('nan')
+    while 'NaN' in associated_hospitals:
+        associated_hospitals.remove('NaN')
     associated_hospitals.append('go back')
     return associated_hospitals
 
@@ -34,7 +38,7 @@ def hospital_status(hospital):
     ownership = specific_clinic_rows['Ownership (Public/Private)'].unique()[0]
     facility_type = specific_clinic_rows['Facility Type (Primary/Secondary/Tertiary)'].unique()[0]
     formatted_string = f'Ownership: {ownership} <br> Facility Type: {facility_type}'
-    return formatted_string
+    return json.loads(formatted_string)
 
 #done
 @app.route('/lga/ward/hospital/<hospital>/humanResources')    
@@ -45,15 +49,20 @@ def hospital_resources(hospital):
                'Name of Ward CE Focal Persion', 'Phone Number 3']
 
     data = ""
+    x = 0
     for column in columns:
         if specific_clinic_rows.iloc[0][column] != 'NaN':
             if 'phone number' in column.lower(): 
-                data += 'phone number: ' + str(specific_clinic_rows.iloc[0][column]) + '<br>'
+                data += 'phone number: ' + str(specific_clinic_rows.iloc[0][column]) + '<br><br>'
             else:
-                data += column + ': ' + str(specific_clinic_rows.iloc[0][column]) + '<br>'
+                data += column + ': ' + str(specific_clinic_rows.iloc[0][column]) + '<br><br>'
+        elif x == 0 or x == 6:
+            data += column + "\t"
         else:
-            data += column + ': This information is currently not available' + '<br>'
-    return data
+            data += column + ': This information is currently not available' + '<br><br>'
+        x+=1
+    return json.loads(data)
+
 
 #done
 @app.route('/lga/ward/hospital/<hospital>/settlementlist')    
@@ -69,10 +78,10 @@ def settlement_population(settlement):
     data = ""
     for column in settlement_info.columns.tolist():
         if settlement_info[column].tolist()[0] != 'NaN':
-            data += column + ': ' + str(settlement_info[column].tolist()[0]) + '<br>'
+            data += column + ': ' + str(settlement_info[column].tolist()[0]) + '<br><br>'
         else:
-            data += column + ': This information is currently not available' + '<br>'
-    return data
+            data += column + ': This information is currently not available' + '<br><br>'
+    return json.loads(data)
 
 #done
 @app.route('/lga/ward/hospital/settlement/profile/<settlement>')    
@@ -83,18 +92,22 @@ def settlement_profile(settlement):
     'Church/Mosque','Market/Play ground','Name of Community Volunteer',
     'Phone Number 2', 'Distance to Health Facility (Km)']
     data = ""
+    x = 0
     for column in columns:
         if str(settlement_info[column].tolist()[0]) != 'NaN' and str(settlement_info[column].tolist()[0]) != 'nan':
             if 'phone number' in column.lower(): 
-                data += 'phone number: ' + str(settlement_info[column].tolist()[0]) + '<br>'
+                data += 'phone number: ' + str(settlement_info[column].tolist()[0]) + '<br><br>'
             else:
-                data += column + ': ' + str(settlement_info[column].tolist()[0]) + '<br>'
+                data += column + ': ' + str(settlement_info[column].tolist()[0]) + '<br><br>'
+        elif x == 0 or x == 6:
+            data += column + "\t"
         else:
             if 'phone number' in column.lower(): 
-                data += 'phone number: This information is currently not available' + '<br>'
+                data += 'phone number: This information is currently not available' + '<br><br>'
             else:
-                data += column + ': This information is currently not available' + '<br>'
-    return data
+                data += column + ': This information is currently not available' + '<br><br>'
+        x+=1
+    return json.loads(data)
 
 #done
 @app.route('/lga/ward/hospital/settlement/immune/<settlement>')    
@@ -104,15 +117,15 @@ def settlement_immune(settlement):
     for column in settlement_info.columns.tolist():
         if str(settlement_info[column].tolist()[0]) != 'NaN' and str(settlement_info[column].tolist()[0]) != 'nan':
             if 'phone number' in column.lower(): 
-                data += 'phone number: ' + str(settlement_info[column].tolist()[0]) + '<br>'
+                data += 'phone number: ' + str(settlement_info[column].tolist()[0]) + '<br><br>'
             else:
-                data += column + ': ' + str(settlement_info[column].tolist()[0]) + '<br>'
+                data += column + ': ' + str(settlement_info[column].tolist()[0]) + '<br><br>'
         else:
             if 'phone number' in column.lower(): 
-                data += 'phone number: This information is currently not available' + '<br>'
+                data += 'phone number: This information is currently not available' + '<br><br>'
             else:
-                data += column + ': This information is currently not available' + '<br>'
-    return data
+                data += column + ': This information is currently not available' + '<br><br>'
+    return json.loads(data)
 
 #done
 @app.route('/lga/ward/hospital/settlement/family/<settlement>')    
@@ -122,15 +135,15 @@ def settlement_family(settlement):
     for column in settlement_info.columns.tolist():
         if str(settlement_info[column].tolist()[0]) != 'NaN' and str(settlement_info[column].tolist()[0]) != 'nan':
             if 'phone number' in column.lower(): 
-                data += 'phone number: ' + str(settlement_info[column].tolist()[0]) + '<br>'
+                data += 'phone number: ' + str(settlement_info[column].tolist()[0]) + '<br><br>'
             else:
-                data += column + ': ' + str(settlement_info[column].tolist()[0]) + '<br>'
+                data += column + ': ' + str(settlement_info[column].tolist()[0]) + '<br><br>'
         else:
             if 'phone number' in column.lower(): 
-                data += 'phone number: This information is currently not available' + '<br>'
+                data += 'phone number: This information is currently not available' + '<br><br>'
             else:
-                data += column + ': This information is currently not available' + '<br>'
-    return data
+                data += column + ': This information is currently not available' + '<br><br>'
+    return json.loads(data)
 
 #done
 @app.route('/lga/ward/hospital/settlement/malaria/<settlement>')    
@@ -140,15 +153,15 @@ def settlement_malaria(settlement):
     for column in settlement_info.columns.tolist():
         if str(settlement_info[column].tolist()[0]) != 'NaN' and str(settlement_info[column].tolist()[0]) != 'nan':
             if 'phone number' in column.lower(): 
-                data += 'phone number: ' + str(settlement_info[column].tolist()[0]) + '<br>'
+                data += 'phone number: ' + str(settlement_info[column].tolist()[0]) + '<br><br>'
             else:
-                data += column + ': ' + str(settlement_info[column].tolist()[0]) + '<br>'
+                data += column + ': ' + str(settlement_info[column].tolist()[0]) + '<br><br>'
         else:
             if 'phone number' in column.lower(): 
-                data += 'phone number: This information is currently not available' + '<br>'
+                data += 'phone number: This information is currently not available' + '<br><br>'
             else:
-                data += column + ': This information is currently not available' + '<br>'
-    return data
+                data += column + ': This information is currently not available' + '<br><br>'
+    return json.loads(data)
 
 #done
 @app.route('/lga/ward/hospital/settlement/consumables/<settlement>')    
@@ -158,15 +171,16 @@ def settlement_consumables(settlement):
     for column in settlement_info.columns.tolist():
         if str(settlement_info[column].tolist()[0]) != 'NaN' and str(settlement_info[column].tolist()[0]) != 'nan':
             if 'phone number' in column.lower(): 
-                data += 'phone number: ' + str(settlement_info[column].tolist()[0]) + '<br>'
+                data += 'phone number: ' + str(settlement_info[column].tolist()[0]) + '<br><br>'
             else:
-                data += column + ': ' + str(settlement_info[column].tolist()[0]) + '<br>'
+                data += column + ': ' + str(settlement_info[column].tolist()[0]) + '<br><br>'
         else:
             if 'phone number' in column.lower(): 
-                data += 'phone number: This information is currently not available' + '<br>'
+                data += 'phone number: This information is currently not available' + '<br><br>'
             else:
-                data += column + ': This information is currently not available' + '<br>'
-    return data
+                data += column + ': This information is currently not available' + '<br><br>'
+    return json.loads(data)
+
 
 #done
 @app.route('/lga/ward/hospital/settlement/factools/<settlement>')    
@@ -176,15 +190,16 @@ def settlement_factools(settlement):
     for column in settlement_info.columns.tolist():
         if str(settlement_info[column].tolist()[0]) != 'NaN' and str(settlement_info[column].tolist()[0]) != 'nan':
             if 'phone number' in column.lower(): 
-                data += 'phone number: ' + str(settlement_info[column].tolist()[0]) + '<br>'
+                data += 'phone number: ' + str(settlement_info[column].tolist()[0]) + '<br><br>'
             else:
-                data += column + ': ' + str(settlement_info[column].tolist()[0]) + '<br>'
+                data += column + ': ' + str(settlement_info[column].tolist()[0]) + '<br><br>'
         else:
             if 'phone number' in column.lower(): 
-                data += 'phone number: This information is currently not available' + '<br>'
+                data += 'phone number: This information is currently not available' + '<br><br>'
             else:
-                data += column + ': This information is currently not available' + '<br>'
-    return data
+                data += column + ': This information is currently not available' + '<br><br>'
+    return json.loads(data)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
