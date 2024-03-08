@@ -3,7 +3,7 @@ import pandas as pd
 import string
 data_csv = pd.read_csv('new_data.csv',low_memory=False)
 frame = pd.DataFrame(data_csv)
-
+#frame = frame.applymap(lambda x: str(x).translate(str.maketrans('', '', string.punctuation)))
 
 app = Flask(__name__)
 
@@ -13,7 +13,7 @@ def lgas():
     unique_lga = frame['LGA'].unique().tolist()
     unique_lga.append('go back')
     for i in range(len(unique_lga)):
-        unique_lga[i] = unique_lga[i].translate(str.maketrans('', '', string.punctuation))
+        #unique_lga[i] = unique_lga[i].translate(str.maketrans('', '', string.punctuation))
         unique_lga[i] = unique_lga[i].capitalize()
     return unique_lga
 
@@ -23,7 +23,7 @@ def ward(lga):
     associated_wards = frame[data_csv['LGA'] == lga]['Ward'].unique().tolist()
     associated_wards.append('go back')
     for i in range(len(associated_wards)):
-        associated_wards[i] = associated_wards[i].translate(str.maketrans('', '', string.punctuation))
+        #associated_wards[i] = associated_wards[i].translate(str.maketrans('', '', string.punctuation))
         associated_wards[i] = associated_wards[i].capitalize()
     return associated_wards
 #done
@@ -36,7 +36,7 @@ def hospitals(ward):
         associated_hospitals.remove('NaN')
     associated_hospitals.append('go back')
     for i in range(len(associated_hospitals)):
-        associated_hospitals[i] = associated_hospitals[i].translate(str.maketrans('', '', string.punctuation))
+        #associated_hospitals[i] = associated_hospitals[i].translate(str.maketrans('', '', string.punctuation))
         associated_hospitals[i] = associated_hospitals[i].capitalize()
     return associated_hospitals
 
@@ -79,7 +79,7 @@ def settlements(hospital):
     settlements = frame[frame['Health Facility'] == hospital]['Settlement'].unique().tolist()
     settlements.append('go back')
     for i in range(len(settlements)):
-        settlements[i] = settlements[i].translate(str.maketrans('', '', string.punctuation))
+        #settlements[i] = settlements[i].translate(str.maketrans('', '', string.punctuation))
         settlements[i] = settlements[i].capitalize()
     return settlements
 
