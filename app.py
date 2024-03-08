@@ -20,6 +20,7 @@ def lgas():
 #done
 @app.route('/lga/<lga>')    
 def ward(lga):
+    lga = lga[0].lower() + lga[1:]
     associated_wards = frame[data_csv['LGA'] == lga]['Ward'].unique().tolist()
     associated_wards.append('go back')
     for i in range(len(associated_wards)):
@@ -29,6 +30,7 @@ def ward(lga):
 #done
 @app.route('/lga/ward/<ward>')    
 def hospitals(ward):
+    ward = ward[0].lower() + ward[1:]
     associated_hospitals = frame[data_csv['Ward'] == ward]['Health Facility'].unique().tolist()
     while 'nan' in associated_hospitals:
         associated_hospitals.remove('nan')
@@ -43,6 +45,7 @@ def hospitals(ward):
 #done
 @app.route('/lga/ward/hospital/<hospital>/status')    
 def hospital_status(hospital):
+    hospital = hospital[0].lower() + hospital[1:]
     specific_clinic_rows = frame[frame['Health Facility'] == hospital]
     ownership = specific_clinic_rows['Ownership (Public/Private)'].unique()[0]
     facility_type = specific_clinic_rows['Facility Type (Primary/Secondary/Tertiary)'].unique()[0]
@@ -52,6 +55,7 @@ def hospital_status(hospital):
 #done
 @app.route('/lga/ward/hospital/<hospital>/humanResources')    
 def hospital_resources(hospital):
+    hospital = hospital[0].lower() + hospital[1:]
     specific_clinic_rows = frame[frame['Health Facility'] == hospital]
     columns = ['OFFICER IN CHARGE','PHONE Number 0','Permanent Technical Staff',
                'Adhoc Technical Staff (BHCPF, LGA, etc)','Volunteer Technical Staff','Permanent Non-Technical Staff',
@@ -76,6 +80,7 @@ def hospital_resources(hospital):
 #done
 @app.route('/lga/ward/hospital/<hospital>/settlementlist')    
 def settlements(hospital):
+    hospital = hospital[0].lower() + hospital[1:]
     settlements = frame[frame['Health Facility'] == hospital]['Settlement'].unique().tolist()
     settlements.append('go back')
     for i in range(len(settlements)):
@@ -86,6 +91,7 @@ def settlements(hospital):
 #done
 @app.route('/lga/ward/hospital/settlement/population/<settlement>')    
 def settlement_population(settlement):
+    settlement = settlement[0].lower() + settlement[1:]
     settlement_info = data_csv[data_csv['Settlement'] == settlement].loc[:,'Total Population of the Settlement':'Mentally Challenged']
     data = ""
     for column in settlement_info.columns.tolist():
@@ -98,6 +104,7 @@ def settlement_population(settlement):
 #done
 @app.route('/lga/ward/hospital/settlement/profile/<settlement>')    
 def settlement_profile(settlement):
+    settlement = settlement[0].lower() + settlement[1:]
     settlement_info = frame[frame['Settlement'] == settlement]
     columns = ['HTR (Yes/No)','Security compromised (Yes/No)','Name of Mai Unguwa', 
     'Phone Number 1','Name of Primary school/Quranic & Ismamic School',
@@ -124,6 +131,7 @@ def settlement_profile(settlement):
 #done
 @app.route('/lga/ward/hospital/settlement/immune/<settlement>')    
 def settlement_immune(settlement):
+    settlement = settlement[0].lower() + settlement[1:]
     settlement_info = frame[frame['Settlement'] == settlement].loc[:,'BCG':'Safety boxes']
     data = ""
     for column in settlement_info.columns.tolist():
@@ -142,6 +150,7 @@ def settlement_immune(settlement):
 #done
 @app.route('/lga/ward/hospital/settlement/family/<settlement>')    
 def settlement_family(settlement):
+    settlement = settlement[0].lower() + settlement[1:]
     settlement_info = frame[frame['Settlement'] == settlement].loc[:,'MINI PILLS':'NORTISTERAT INJ']
     data = ""
     for column in settlement_info.columns.tolist():
@@ -160,6 +169,7 @@ def settlement_family(settlement):
 #done
 @app.route('/lga/ward/hospital/settlement/malaria/<settlement>')    
 def settlement_malaria(settlement):
+    settlement = settlement[0].lower() + settlement[1:]
     settlement_info = frame[frame['Settlement'] == settlement].loc[:,'RDT FOR MALARIA':'Vit-A']
     data = ""
     for column in settlement_info.columns.tolist():
@@ -178,6 +188,7 @@ def settlement_malaria(settlement):
 #done
 @app.route('/lga/ward/hospital/settlement/consumables/<settlement>')    
 def settlement_consumables(settlement):
+    settlement = settlement[0].lower() + settlement[1:]
     settlement_info = frame[frame['Settlement'] == settlement].loc[:,'COTTON WOOL 100G (1 per HF)':'TABLE NAPKIN (ROLL)']
     data = ""
     for column in settlement_info.columns.tolist():
@@ -197,6 +208,7 @@ def settlement_consumables(settlement):
 #done
 @app.route('/lga/ward/hospital/settlement/factools/<settlement>')    
 def settlement_factools(settlement):
+    settlement = settlement[0].lower() + settlement[1:]
     settlement_info = frame[frame['Settlement'] == settlement].loc[:,'OPD REGISTER (1 per HF)':'Envelopes']
     data = ""
     for column in settlement_info.columns.tolist():
