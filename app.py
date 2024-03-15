@@ -3,7 +3,7 @@ import pandas as pd
 import string
 data_csv = pd.read_csv('new_data.csv',low_memory=False)
 frame = pd.DataFrame(data_csv)
-frame = frame.applymap(lambda x: str(x).translate(str.maketrans('', '', string.punctuation)))
+frame = frame.applymap(lambda x: str(x).replace("/","").replace("'",""))
 
 app = Flask(__name__)
 
@@ -12,8 +12,13 @@ app = Flask(__name__)
 def lgas():
     unique_lga = frame['LGA'].unique().tolist()
     unique_lga.append('go back')
+    while ('nan' in unique_lga):
+        unique_lga.remove('nan')
+    while ('NaN' in unique_lga):
+        unique_lga.remove('NaN')
+    while ('Nan' in unique_lga):
+        unique_lga.remove('Nan')
     for i in range(len(unique_lga)):
-        unique_lga[i] = unique_lga[i].translate(str.maketrans('', '', string.punctuation))
         unique_lga[i] = unique_lga[i].capitalize()
     return unique_lga
 
@@ -21,10 +26,15 @@ def lgas():
 @app.route('/lga/<lga>')    
 def ward(lga):
     lga = lga[0].lower() + lga[1:]
-    associated_wards = frame[data_csv['LGA'] == lga]['Ward'].unique().tolist()
+    associated_wards = frame[frame['LGA'] == lga]['Ward'].unique().tolist()
     associated_wards.append('go back')
+    while ('nan' in associated_wards):
+        associated_wards.remove('nan')
+    while ('NaN' in associated_wards):
+        associated_wards.remove('NaN')
+    while ('Nan' in associated_wards):
+        associated_wards.remove('Nan')
     for i in range(len(associated_wards)):
-        associated_wards[i] = associated_wards[i].translate(str.maketrans('', '', string.punctuation))
         associated_wards[i] = associated_wards[i].capitalize()
     return associated_wards
 #done
@@ -36,9 +46,10 @@ def hospitals(ward):
         associated_hospitals.remove('nan')
     while 'NaN' in associated_hospitals:
         associated_hospitals.remove('NaN')
+    while ('Nan' in associated_hospitals):
+        associated_hospitals.remove('Nan')
     associated_hospitals.append('go back')
     for i in range(len(associated_hospitals)):
-        associated_hospitals[i] = associated_hospitals[i].translate(str.maketrans('', '', string.punctuation))
         associated_hospitals[i] = associated_hospitals[i].capitalize()
     return associated_hospitals
 
@@ -64,7 +75,8 @@ def hospital_resources(hospital):
     data = ""
     x = 0
     for column in columns:
-        if specific_clinic_rows.iloc[0][column] != 'NaN' and specific_clinic_rows.iloc[0][column] != 'nan':
+        if specific_clinic_rows.iloc[0][column] != 'NaN' and specific_clinic_rows.iloc[0][column] != 'nan' \
+        and specific_clinic_rows.iloc[0][column] != 'Nan':
             if 'phone number' in column.lower(): 
                 data += 'phone number: ' + str(specific_clinic_rows.iloc[0][column]) + '<br><br>'
             elif x == 0 or x == 6:
@@ -84,7 +96,6 @@ def settlements(hospital):
     settlements = frame[frame['Health Facility'] == hospital]['Settlement'].unique().tolist()
     settlements.append('go back')
     for i in range(len(settlements)):
-        #settlements[i] = settlements[i].translate(str.maketrans('', '', string.punctuation))
         settlements[i] = settlements[i].capitalize()
     return settlements
 
@@ -95,7 +106,8 @@ def settlement_population(settlement):
     settlement_info = data_csv[data_csv['Settlement'] == settlement].loc[:,'Total Population of the Settlement':'Mentally Challenged']
     data = ""
     for column in settlement_info.columns.tolist():
-        if settlement_info[column].tolist()[0] != 'NaN' and settlement_info[column].tolist()[0] != 'nan':
+        if settlement_info[column].tolist()[0] != 'NaN' and settlement_info[column].tolist()[0] != 'nan' \
+            and settlement_info[column].tolist()[0] != 'Nan':
             data += column + ': ' + str(settlement_info[column].tolist()[0]) + '<br><br>'
         else:
             data += column + ': This information is currently not available' + '<br><br>'
@@ -113,7 +125,8 @@ def settlement_profile(settlement):
     data = ""
     x = 0
     for column in columns:
-        if str(settlement_info[column].tolist()[0]) != 'NaN' and str(settlement_info[column].tolist()[0]) != 'nan':
+        if str(settlement_info[column].tolist()[0]) != 'NaN' and str(settlement_info[column].tolist()[0]) != 'nan' \
+            and str(settlement_info[column].tolist()[0]) != 'Nan':
             if 'phone number' in column.lower(): 
                 data += 'phone number: ' + str(settlement_info[column].tolist()[0]) + '<br><br>'
             elif x == 0 or x == 6:
@@ -135,7 +148,8 @@ def settlement_immune(settlement):
     settlement_info = frame[frame['Settlement'] == settlement].loc[:,'BCG':'Safety boxes']
     data = ""
     for column in settlement_info.columns.tolist():
-        if str(settlement_info[column].tolist()[0]) != 'NaN' and str(settlement_info[column].tolist()[0]) != 'nan':
+        if str(settlement_info[column].tolist()[0]) != 'NaN' and str(settlement_info[column].tolist()[0]) != 'nan'\
+            and str(settlement_info[column].tolist()[0]) != 'Nan':
             if 'phone number' in column.lower(): 
                 data += 'phone number: ' + str(settlement_info[column].tolist()[0]) + '<br><br>'
             else:
@@ -154,7 +168,8 @@ def settlement_family(settlement):
     settlement_info = frame[frame['Settlement'] == settlement].loc[:,'MINI PILLS':'NORTISTERAT INJ']
     data = ""
     for column in settlement_info.columns.tolist():
-        if str(settlement_info[column].tolist()[0]) != 'NaN' and str(settlement_info[column].tolist()[0]) != 'nan':
+        if str(settlement_info[column].tolist()[0]) != 'NaN' and str(settlement_info[column].tolist()[0]) != 'nan' \
+           and  str(settlement_info[column].tolist()[0]) != 'Nan':
             if 'phone number' in column.lower(): 
                 data += 'phone number: ' + str(settlement_info[column].tolist()[0]) + '<br><br>'
             else:
@@ -173,7 +188,8 @@ def settlement_malaria(settlement):
     settlement_info = frame[frame['Settlement'] == settlement].loc[:,'RDT FOR MALARIA':'Vit-A']
     data = ""
     for column in settlement_info.columns.tolist():
-        if str(settlement_info[column].tolist()[0]) != 'NaN' and str(settlement_info[column].tolist()[0]) != 'nan':
+        if str(settlement_info[column].tolist()[0]) != 'NaN' and str(settlement_info[column].tolist()[0]) != 'nan' \
+            and str(settlement_info[column].tolist()[0]) != 'Nan':
             if 'phone number' in column.lower(): 
                 data += 'phone number: ' + str(settlement_info[column].tolist()[0]) + '<br><br>'
             else:
@@ -192,7 +208,8 @@ def settlement_consumables(settlement):
     settlement_info = frame[frame['Settlement'] == settlement].loc[:,'COTTON WOOL 100G (1 per HF)':'TABLE NAPKIN (ROLL)']
     data = ""
     for column in settlement_info.columns.tolist():
-        if str(settlement_info[column].tolist()[0]) != 'NaN' and str(settlement_info[column].tolist()[0]) != 'nan':
+        if str(settlement_info[column].tolist()[0]) != 'NaN' and str(settlement_info[column].tolist()[0]) != 'nan' \
+            and str(settlement_info[column].tolist()[0]) != 'Nan':
             if 'phone number' in column.lower(): 
                 data += 'phone number: ' + str(settlement_info[column].tolist()[0]) + '<br><br>'
             else:
@@ -212,7 +229,8 @@ def settlement_factools(settlement):
     settlement_info = frame[frame['Settlement'] == settlement].loc[:,'OPD REGISTER (1 per HF)':'Envelopes']
     data = ""
     for column in settlement_info.columns.tolist():
-        if str(settlement_info[column].tolist()[0]) != 'NaN' and str(settlement_info[column].tolist()[0]) != 'nan':
+        if str(settlement_info[column].tolist()[0]) != 'NaN' and str(settlement_info[column].tolist()[0]) != 'nan' \
+            and str(settlement_info[column].tolist()[0]) != 'Nan':
             if 'phone number' in column.lower(): 
                 data += 'phone number: ' + str(settlement_info[column].tolist()[0]) + '<br><br>'
             else:
